@@ -6,7 +6,7 @@ Here are materials for my [Michigan Math Circle](https://sites.lsa.umich.edu/mat
 
 * `worksheet-dp-math-circle.pdf`: Main lecture notes. I distributed a copy of this to each student. In 90 minutes, I was unable to go into section 4.
 
-* `supp-lecture-notes-dp-math-circle.pdf`: Supplementary lecture notes. This one has answers to the questions and what I want to speak or write on the blackboard in class. Not to be distributed to students.
+* `supp-lecture-notes-dp-math-circle.pdf`: Supplementary lecture notes. This one has answers to the questions and what I wanted to speak or write on the blackboard in class. Not to be distributed to students.
 
 ## Codes to generate figures
 
