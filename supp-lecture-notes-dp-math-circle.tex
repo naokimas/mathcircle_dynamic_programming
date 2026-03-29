@@ -1,0 +1,359 @@
+\documentclass[a4paper, 12pt]{article}
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{1.75in}
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\usepackage{amssymb,amsmath}
+\usepackage{bm}
+\usepackage{color}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+\begin{document}
+
+\begin{center}
+\begin{Large}
+Dynamic programming: Supplementary lecture notes including answers to problems
+\end{Large}\\
+\ \\
+Naoki Masuda\\
+Professor, Gilbert S.\,Omenn Department of Computational Medicine and Bioinformatics\\
+Professor, Department of Mathematics\\
+\ \\
+UM Math Circle, 2/19/2026 
+\end{center}
+
+% \setcounter{section}{-1}
+
+\section{Mouse in a maze and Dynamic programming}
+
+\begin{itemize}
+
+\item Start with the simplest maze with 2 paths of depth 1.
+
+\item Next, do a maze with 4 paths (binary tree) of depth 2.
+
+\item Expose them to depth 3, 4, and 5, and ask how many possible paths there are (i.e., $8$, $16$, and $32$).
+
+\item Write internal node names and squares on nodes representing ``how much you can \underline{maximally} get if you start from there.
+
+\item Fibonacci numbers
+
+\begin{equation}
+F(n) = F(n-1)+F(n-2)
+\end{equation}
+with $F(0) = 0$, $F(1) = 1$.\\
+Q: How are those numbers called? $\to$ A: Fibonacci numbers (by Indian mathematics in 200BC, and by Fibonacci in 1202)
+
+What is $F(10)$?\\
+One strategy using the above definition is
+\begin{align}
+F(10) &= F(9) + F(8) \notag \\
+%
+&= \left( F(8) +F(7) \right) + \left( F(7) + F(6) \right) \notag \\
+%
+&= F(8) + 2 F(7) + F(6) \notag \\
+%
+&= \left( F(7) + F(6) \right) + 2 \left( F(6) + F(5) \right) + \left( F(5) + F(4) \right) \ldots
+\end{align}
+
+Wait. In this case, a better way to do is forward than backward (the converse to the above, but the principle is the same). That is,
+\begin{align}
+F(2) &= F(1) + F(0) = 1 + 0 = 1,\\
+F(3) &= F(2) + F(1) = 1 + 1 = 2,\\
+F(4) &= F(3) + F(2) = 2 + 1 = 3,\\
+F(5) &= F(4) + F(3) = 3 + 2 = 5, \ldots
+\end{align}
+
+\end{itemize}
+
+\section{Jumpy frog path problem}
+
+In the four-stone problem used in class, there are three possible paths.
+
+\textbf{Solution to Problem 6:}
+
+S5 means stone 5, for example.
+%
+\begin{align*}
+V(6) &= 1,\\
+%
+V(5) &= 3 + V(6) = 3 + 1 = 4 \quad (\text{S}5 \to \text{S}6 \text{ is the only choice}),\\
+%
+V(4) &= -3 + \max\{ V(5), V(6) \} = -3 + 4 = 1 \quad (\text{S}4 \to \text{S}5),\\
+%
+V(3) &= 2 + \max\{ V(4), V(5) \} = 2 + 4 = 6 \quad (\text{S}3 \to \text{S}5),\\
+%
+V(2) &= -1 + \max\{ V(3), V(4) \} = -1 + 6 = 5 \quad (\text{S}2 \to \text{S}3),\\
+%
+V(1) &= 3 + \max\{ V(2), V(3) \} = 3 + 6 = 9 \quad (\text{S}1 \to \text{S}3),\\
+%
+V(0) &= 0 + \max\{ V(1), V(2) \} = 0 + 9 = 9 \quad (\text{S}0 \to \text{S}1).
+\end{align*}
+
+So, the best total reward obtained is $V(0) = 9$, and the best routes are $\text{S}0 \to \text{S}1 \to \text{S}3 \to \text{S}5 \to \text{S}6$.
+
+\textbf{Solution to Problem 7:}
+%
+\begin{align*}
+V(12) &= 1,\\
+%
+V(11) &= 2 + V(12) = 2 + 1 = 3 \quad (\text{S}11 \to \text{S}12 \text{ is the only choice}),\\
+%
+V(10) &= 1 + V(11) = 1 + 3 = 4 \quad (\text{S}10 \to \text{S}11 \text{ is the only choice}),\\
+%
+V(9) &= -5 + \max\{ V(10), V(12) \} = -5 + 4 = -1 \quad (\text{S}9 \to \text{S}10),\\
+%
+V(8) &= 2 + \max\{ V(9), V(11) \} = 2 + 3 = 5 \quad (\text{S}8 \to \text{S}11),\\
+%
+V(7) &= -3 + \max\{ V(8), V(10), V(12) \} = -3 + 5 = 2 \quad (\text{S}7 \to \text{S}8),\\
+%
+V(6) &= 1 + \max\{ V(7), V(9), V(11) \} = 1 + 3 = 4 \quad (\text{S}6 \to \text{S}11),\\
+%
+V(5) &= -2 + \max\{ V(6), V(8), V(10) \} = -2 + 5 = 3 \quad (\text{S}5 \to \text{S}8),\\
+%
+V(4) &= 1 + \max\{ V(5), V(7), V(9) \} = 1 + 3 = 4 \quad (\text{S}4 \to \text{S}5),\\
+%
+V(3) &= -4 + \max\{ V(4), V(6), V(8) \} = -4 + 5 = 1 \quad (\text{S}3 \to \text{S}8),\\
+%
+V(2) &= -1 + \max\{ V(3), V(5), V(7) \} = -1 + 3 = 2 \quad (\text{S}2 \to \text{S}5),\\
+%
+V(1) &= 3 + \max\{ V(2), V(4), V(6) \} = 3 + 4 = 7 \quad (\text{S}1 \to \text{S}4 \text{ or } \text{S}1 \to \text{S}6),\\
+%
+V(0) &= 0 + \max\{ V(1), V(3), V(5) \} = 0 + 7 = 7 \quad (\text{S}0 \to \text{S}1).
+\end{align*}
+
+So, the best total reward obtained is $V(0) = 7$, and the best routes are $\text{S}0 \to \text{S}1 \to \text{S}4 \to \text{S}5 \to \text{S}8 \to \text{S}11 \to \text{S}12$ or $\text{S}0 \to \text{S}1 \to \text{S}6 \to \text{S}11 \to \text{S}12$.
+
+\section{Discounted candy collection}
+
+\textbf{Solution to Problem 8:}
+
+Now $r = \frac{1}{8}$.
+
+\begin{equation*}
+V(3) = 7 + \frac{1}{8} V(3).
+\end{equation*}
+Therefore, $V(3) = 8$ (your only option at room 3 is to STAY).
+
+\begin{equation*}
+V(2) = 4 + \max \left\{ \frac{1}{8} V(2), \frac{1}{8} V(3) \right\}.
+\end{equation*}
+If STAY in room 2 is better, then $V(2) = 4 + \frac{1}{8} V(2)$, which leads to $V(2) = \frac{32}{7}$.\\
+If (going) RIGHT in room 2 is better, then $V(2) = 4 + \frac{1}{8} V(3) = 5$.\\
+So, better to go RIGHT if you are in room 2, and $V(2) = 5$.
+
+\begin{equation*}
+V(1) = -1 + \max \left\{ \frac{1}{8} V(1), \frac{1}{8} V(2) \right\}.
+\end{equation*}
+If STAY in room 1 is better, then $V(1) = -1 + \frac{1}{8} V(1)$, which leads to $V(1) = -\frac{8}{7}$. This sounds really bad.\\
+If (going) RIGHT in room 1 is better, then $V(1) = -1 + \frac{1}{8} V(2) = -\frac{3}{8}$.\\
+So, better to go RIGHT if you are in room 1, and $V(1) = - \frac{3}{8}$.
+
+\begin{equation*}
+V(0) = 2 + \max \left\{ \frac{1}{8} V(0), \frac{1}{8} V(1) \right\}.
+\end{equation*}
+If STAY in room 0 is better, then $V(0) = 2 + \frac{1}{8} V(0)$, which leads to $V(0) = \frac{16}{7}$.\\
+If (going) RIGHT in room 0 is better, then $V(0) = 2 + \frac{1}{8} V(1) = \frac{125}{64}$, which is smaller than $\frac{16}{7}$. (Note that $\frac{125}{64} < 2 < \frac{16}{7}$.\\
+So, better to STAY if you are in room 0, and $V(0) = \frac{16}{7}$.
+
+The best behavior is to STAY in room 0 forever. There are a big number of candies you would be able to obtain every day if you reach room 3. However, because you really care about now than the future, you really hate to go through room 1. You prefer to STAY in room 0.
+
+\textbf{Solution to Problem 9:}
+
+\begin{equation*}
+V(3) = 1 + \frac{1}{2} V(3).
+\end{equation*}
+Therefore, $V(3) = 2$ (your only option at room 3 is to STAY).
+
+\begin{equation*}
+V(2) = 5 + \max \left\{ \frac{1}{2} V(2), \frac{1}{2} V(3) \right\}.
+\end{equation*}
+If STAY in room 2 is better, then $V(2) = 5 + \frac{1}{2} V(2)$, which leads to $V(2) = 10$.\\
+If (going) RIGHT in room 2 is better, then $V(2) = 5 + \frac{1}{2} V(3) = 6$.\\
+So, better to STAY if you are in room 2, and $V(2) = 10$.
+
+\begin{equation*}
+V(1) = 4 + \max \left\{ \frac{1}{2} V(1), \frac{1}{2} V(2) \right\}.
+\end{equation*}
+If STAY in room 1 is better, then $V(1) = 4 + \frac{1}{2} V(1)$, which leads to $V(1) = 8$.\\
+If (going) RIGHT in room 1 is better, then $V(1) = 4 + \frac{1}{2} V(2) = 9$.\\
+So, better to go RIGHT if you are in room 1, and $V(1) = 9$.
+
+\begin{equation*}
+V(0) = 3 + \max \left\{ \frac{1}{2} V(0), \frac{1}{2} V(1) \right\}.
+\end{equation*}
+If STAY in room 0 is better, then $V(0) = 3 + \frac{1}{2} V(0)$, which leads to $V(0) = 6$.\\
+If (going) RIGHT in room 0 is better, then $V(0) = 3 + \frac{1}{2} V(1) = \frac{15}{2}$.\\
+So, better to go RIGHT if you are in room 0, and $V(0) = \frac{15}{2}$.
+
+The best behavior is from room 0 to room 1, and then to room 2, and stay in room 2 forever. This is intuitive.
+
+\textbf{Solution to Problem 10:}
+
+When $r = \frac{1}{2}$:
+
+\begin{equation*}
+V(4) = 6 + \frac{1}{2} V(4).
+\end{equation*}
+Therefore, $V(4) = 12$ (your only option at room 4 is to STAY).
+
+\begin{equation*}
+V(3) = 0 + \max \left\{ \frac{1}{2} V(3), \frac{1}{2} V(4) \right\}.
+\end{equation*}
+If STAY in room 3 is better, then $V(3) = 0 + \frac{1}{2} V(3)$, which leads to $V(3) = 0$.\\
+If (going) RIGHT in room 3 is better, then $V(3) = 0 + \frac{1}{2} V(4) = 6$.\\
+So, better to go RIGHT if you are in room 3, and $V(3) = 6$.
+
+\begin{equation*}
+V(2) = 4 + \max \left\{ \frac{1}{2} V(2), \frac{1}{2} V(3) \right\}.
+\end{equation*}
+If STAY in room 2 is better, then $V(2) = 4 + \frac{1}{2} V(2)$, which leads to $V(2) = 8$.\\
+If (going) RIGHT in room 2 is better, then $V(2) = 4 + \frac{1}{2} V(3) = 7$.\\
+So, better to STAY if you are in room 2, and $V(2) = 8$.
+
+\begin{equation*}
+V(1) = -1 + \max \left\{ \frac{1}{2} V(1), \frac{1}{2} V(2) \right\}.
+\end{equation*}
+If STAY in room 1 is better, then $V(1) = -1 + \frac{1}{2} V(1)$, which leads to $V(1) = -2$.\\
+If (going) RIGHT in room 1 is better, then $V(1) = -1 + \frac{1}{2} V(2) = 3$.\\
+So, better to go RIGHT if you are in room 1, and $V(1) = 3$.
+
+\begin{equation*}
+V(0) = 1 + \max \left\{ \frac{1}{2} V(0), \frac{1}{2} V(1) \right\}.
+\end{equation*}
+If STAY in room 0 is better, then $V(0) = 1 + \frac{1}{2} V(0)$, which leads to $V(0) = 2$.\\
+If (going) RIGHT in room 0 is better, then $V(0) = 1 + \frac{1}{2} V(1) = \frac{5}{2}$.\\
+So, better to go RIGHT if you are in room 0, and $V(0) = \frac{5}{2}$.
+
+The best behavior is from room 0 to room 1, and then to room 2, and stay in room 2 forever. You miss large reward by moving to and staying in room 4.
+
+When $r = \frac{3}{4}$:
+
+\begin{equation*}
+V(4) = 6 + \frac{3}{4} V(4).
+\end{equation*}
+Therefore, $V(4) = 24$ (your only option at room 4 is to STAY).
+
+\begin{equation*}
+V(3) = 0 + \max \left\{ \frac{3}{4} V(3), \frac{3}{4} V(4) \right\}.
+\end{equation*}
+If STAY in room 3 is better, then $V(3) = 0 + \frac{3}{4} V(3)$, which leads to $V(3) = 0$.\\
+If (going) RIGHT in room 3 is better, then $V(3) = 0 + \frac{3}{4} V(4) = 18$.\\
+So, better to go RIGHT if you are in room 3, and $V(3) = 18$.
+
+\begin{equation*}
+V(2) = 4 + \max \left\{ \frac{3}{4} V(2), \frac{3}{4} V(3) \right\}.
+\end{equation*}
+If STAY in room 2 is better, then $V(2) = 4 + \frac{3}{4} V(2)$, which leads to $V(2) = 16$.\\
+If (going) RIGHT in room 2 is better, then $V(2) = 4 + \frac{3}{4} V(3) = \frac{35}{2}$.\\
+So, better to go RIGHT if you are in room 2, and $V(2) = \frac{35}{2}$.
+
+\begin{equation*}
+V(1) = -1 + \max \left\{ \frac{3}{4} V(1), \frac{1}{2} V(2) \right\}.
+\end{equation*}
+If STAY in room 1 is better, then $V(1) = -1 + \frac{3}{4} V(1)$, which leads to $V(1) = -4$.\\
+If (going) RIGHT in room 1 is better, then $V(1) = -1 + \frac{3}{4} V(2) = \frac{97}{8}$.\\
+So, better to go RIGHT if you are in room 1, and $V(1) = \frac{97}{8}$.
+
+\begin{equation*}
+V(0) = 1 + \max \left\{ \frac{3}{4} V(0), \frac{3}{4} V(1) \right\}.
+\end{equation*}
+If STAY in room 0 is better, then $V(0) = 1 + \frac{3}{4} V(0)$, which leads to $V(0) = 4$.\\
+If (going) RIGHT in room 0 is better, then $V(0) = 1 + \frac{3}{4} V(1) = \frac{323}{32}$.\\
+So, better to go RIGHT if you are in room 0, and $V(0) = \frac{323}{32}$.
+
+The best behavior is from room 0 to room 1, and room 2, room 3, and to room 4, and stay in room 4 forever.
+
+\section{Edit distance}
+
+\begin{enumerate}
+\item The edit distance between ``CART'' and ``CAR'' $= 1$.
+\item The edit distance between ``FROM'' and ``FORM''? $= 2$.
+\item The edit distance between ``NEAR'' and ``EARN''? $= 2$.
+\item The edit distance between ``SUNDAY'' and ``SATURDAY'' $= 3$ (but not easy to get it).
+\end{enumerate}
+
+Draw $d$-table and explain for the edit distance between ``CART'' and ``CAR'' and
+between  ``FROM'' and ``FORM''.
+
+\textbf{Solution to Problem 11:}
+
+\begin{tabular}{cccccc}
+ & `` & E & A & R & N\\
+ `` & 0 & 1 & 2 & 3 & 4\\
+N & 1 & 1 & 2 & 3 & 3\\
+E & 2 & 1 & 2 & 3 & 4\\
+A & 3 & 2 & 1 & 2 & 3\\
+R & 4 & 3 & 2 & 1 & 2
+\end{tabular}
+
+So, the edit distance is 2.
+
+\bigskip
+
+\begin{tabular}{ccccccc}
+ & `` & S & T & E & A & L\\
+ `` & 0 & 1 & 2 & 3 & 4 & 5\\
+L & 1 & 1 & 2 & 3 & 4 & 4\\
+E & 2 & 2 & 2 & 2 & 3 & 4\\
+A & 3 & 3 & 3 & 3 & 2 & 3\\
+S & 4 & 3 & 4 & 4 & 3 & 3\\
+T & 5 & 4 & 3 & 4 & 4 & 4
+\end{tabular}
+
+So, the edit distance is 4.
+
+\bigskip
+
+\begin{tabular}{cccccccc}
+ & `` & B & A & L & L & E & T\\
+ `` & 0 & 1 & 2 & 3 & 4 & 5 & 6\\
+C & 1 & 1 & 2 & 3 & 4 & 5 & 6\\
+A & 2 & 2 & 1 & 2 & 3 & 4 & 5\\
+M & 3 & 3 & 2 & 2 & 3 & 4 & 5\\
+E & 4 & 4 & 3 & 3 & 3 & 3 & 4\\
+L & 5 & 5 & 4 & 3 & 3 & 4 & 4\\
+Y & 6 & 6 & 5 & 4 & 4 & 4 & 5
+\end{tabular}
+
+So, the edit distance is 5.
+
+\bigskip
+
+\begin{tabular}{cccccccc}
+ & `` & R & E & E & L & L & S\\
+ `` & 0 & 1 & 2 & 3 & 4 & 5 & 6\\
+S & 1 & 1 & 2 & 3 & 4 & 5 & 5\\
+E & 2 & 2 & 1 & 2 & 3 & 4 & 5\\
+L & 3 & 3 & 2 & 2 & 2 & 3 & 4\\
+L & 4 & 4 & 3 & 3 & 2 & 2 & 3\\
+E & 5 & 5 & 4 & 3 & 3 & 3 & 3\\
+R & 6 & 5 & 5 & 4 & 4 & 4 & 4
+\end{tabular}
+
+So, the edit distance is 4.
+
+\bigskip
+
+\begin{tabular}{cccccccccc}
+ & `` & S & A & T & U & R & D & A & Y\\
+ `` & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\
+S & 1 & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7\\
+U & 2 & 1 & 1 & 2 & 2 & 3 & 4 & 5 & 6\\
+N & 3 & 2 & 2 & 2 & 3 & 3 & 4 & 5 & 6\\
+D & 4 & 3 & 3 & 3 & 3 & 4 & 3 & 4 & 5\\
+A & 5 & 4 & 3 & 4 & 4 & 4 & 4 & 3 & 4\\
+Y & 6 & 5 & 4 & 4 &5 & 5 & 5 & 4 & 3
+\end{tabular}
+
+So, the edit distance is 3.
+
+\end{document}
+
+
+
