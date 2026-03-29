@@ -10,7 +10,7 @@ Here are materials for my [Michigan Math Circle](https://sites.lsa.umich.edu/mat
 
 ## Codes to generate figures
 
-I generated drafts of these codes by AI and then adjusted it.
+I generated drafts of these codes by AI and then tuned them.
 
 * `dp_maze_*.py`: Generate the figures in section 1.
 * `frog_stones_{1,2,3}.py`: Generate the figures in section 2.
